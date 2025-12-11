@@ -2,8 +2,10 @@ import BlurText from "./BlurText";
 import AnimatedContent from "./AnimatedContent";
 import { Button } from "../components/ui/button";
 import AboutImg from "../assets/about-img.png";
+import { useNavigate } from "react-router-dom";
 
 const AboutSection = () => {
+  const navigate = useNavigate();
   return (
     <div>
       <div
@@ -44,8 +46,7 @@ const AboutSection = () => {
               <div className="flex flex-row sm:flex-row gap-4 max-md:gap-3">
                 <Button
                   onClick={() => {
-                    const formElement = document.getElementById("form");
-                    formElement?.scrollIntoView({ behavior: "smooth" });
+                    navigate("/register");
                   }}
                   className="cursor-pointer bg-black text-white rounded-full px-16 py-6 max-md:py-4 border border-black/20 transition sm:w-auto max-md:text-[14px]"
                 >

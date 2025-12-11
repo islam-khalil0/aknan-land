@@ -4,8 +4,11 @@ import BlurText from "./BlurText";
 import { Button } from "../components/ui/button";
 import { FiAward } from "react-icons/fi";
 import AnimatedContent from "./AnimatedContent";
+import { useNavigate } from "react-router-dom";
 
 const HeroSection = () => {
+    const navigate = useNavigate();
+
   return (
     <div>
       <div className="relative w-full min-h-[700px] max-md:min-h-[550px] flex items-center justify-center overflow-hidden">
@@ -74,10 +77,9 @@ const HeroSection = () => {
           >
             <div className="flex flex-row sm:flex-row gap-4 max-md:gap-3">
               <Button
-                onClick={() => {
-                  const formElement = document.getElementById("form");
-                  formElement?.scrollIntoView({ behavior: "smooth" });
-                }}
+             onClick={() => {
+        navigate("/register");
+      }}
                 className="cursor-pointer bg-white text-black rounded-full px-12 max-md:px-10 py-6 max-md:py-4 hover:bg-white/80 hover:text-black border border-black/20 transition sm:w-auto max-md:text-[14px]"
               >
                 ابدأ الآن

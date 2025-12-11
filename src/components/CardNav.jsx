@@ -1,8 +1,7 @@
 import { useLayoutEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
-// use your own icon import if react-icons is not available
-import { GoArrowUpRight } from "react-icons/go";
 import { GoArrowUpLeft } from "react-icons/go";
+import { Link, useNavigate } from "react-router-dom";
 
 const CardNav = ({
   logo,
@@ -15,6 +14,7 @@ const CardNav = ({
   buttonBgColor,
   buttonTextColor,
 }) => {
+  const navigate = useNavigate();
   const [isHamburgerOpen, setIsHamburgerOpen] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const navRef = useRef(null);
@@ -24,7 +24,6 @@ const CardNav = ({
   const calculateHeight = () => {
     const navEl = navRef.current;
     if (!navEl) return 260;
-
     const isMobile = window.matchMedia("(max-width: 768px)").matches;
     if (isMobile) {
       const contentEl = navEl.querySelector(".card-nav-content");
@@ -88,13 +87,11 @@ const CardNav = ({
       tl?.kill();
       tlRef.current = null;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ease, items]);
 
   useLayoutEffect(() => {
     const handleResize = () => {
       if (!tlRef.current) return;
-
       if (isExpanded) {
         const newHeight = calculateHeight();
         gsap.set(navRef.current, { height: newHeight });
@@ -116,7 +113,6 @@ const CardNav = ({
 
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isExpanded]);
 
   const toggleMenu = () => {
@@ -133,6 +129,30 @@ const CardNav = ({
     }
   };
 
+  const closeMenu = () => {
+    if (!isExpanded) return;
+    setIsHamburgerOpen(false);
+    const tl = tlRef.current;
+    tl?.eventCallback("onReverseComplete", () => setIsExpanded(false));
+    tl?.reverse();
+  };
+
+  const handleScrollOrRoute = (href) => {
+    closeMenu();
+    if (href.startsWith("/")) {
+      // React Router route
+      navigate(href);
+    } else if (href.startsWith("#")) {
+      // Scroll to section
+      if (window.location.pathname !== "/") {
+        navigate("/", { state: { scrollTo: href.replace("#", "") } });
+      } else {
+        const el = document.querySelector(href);
+        el?.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  };
+
   const setCardRef = (i) => (el) => {
     if (el) cardsRef.current[i] = el;
   };
@@ -143,19 +163,14 @@ const CardNav = ({
     >
       <nav
         ref={navRef}
-        className={`
-    card-nav ${isExpanded ? "open" : ""}
-    block
-    rounded-4xl shadow-md
-    relative overflow-hidden will-change-[height]
-    backdrop-blur-2xl bg-white/20
-  `}
-        style={{
-          height: "62px",
-          backgroundColor: baseColor || "transparent",
-        }}
+        className={`card-nav ${
+          isExpanded ? "open" : ""
+        } block rounded-4xl shadow-md relative overflow-hidden will-change-[height] backdrop-blur-2xl bg-white/20`}
+        style={{ height: "62px", backgroundColor: baseColor || "transparent" }}
       >
+        {/* Top Bar */}
         <div className="card-nav-top absolute inset-x-0 top-0 h-[60px] flex items-center justify-between py-2 pr-[2.1rem] pl-[2.1rem] z-[2]">
+          {/* Hamburger */}
           <div
             className={`hamburger-menu ${
               isHamburgerOpen ? "open" : ""
@@ -178,19 +193,19 @@ const CardNav = ({
             />
           </div>
 
+          {/* Logo */}
           <div className="logo-container flex items-center md:absolute md:left-1/2 md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2 order-1 md:order-none">
             <img
               src={logo}
               alt={logoAlt}
-              className="logo h-[33px] max-md:h-[26px]"
+              className="logo h-[33px] max-md:h-[26px] cursor-pointer"
+              onClick={() => handleScrollOrRoute("/")}
             />
           </div>
 
+          {/* CTA Button */}
           <button
-            onClick={() => {
-              const formElement = document.getElementById("form");
-              formElement?.scrollIntoView({ behavior: "smooth" });
-            }}
+            onClick={() => handleScrollOrRoute("/register")}
             type="button"
             className="card-nav-cta-button hidden md:inline-flex border-0 rounded-4xl px-10 items-center h-[40px] font-medium cursor-pointer transition-colors duration-300"
             style={{ backgroundColor: buttonBgColor, color: buttonTextColor }}
@@ -199,6 +214,7 @@ const CardNav = ({
           </button>
         </div>
 
+        {/* Card Content */}
         <div
           className={`card-nav-content absolute left-0 right-0 top-[60px] bottom-0 px-2 py-4 flex flex-col items-stretch gap-2 justify-start z-[1] ${
             isExpanded
@@ -217,25 +233,20 @@ const CardNav = ({
               <div className="nav-card-label font-normal tracking-[-0.5px] text-[16px] md:text-[22px]">
                 {item.label}
               </div>
+
               <div className="nav-card-links mt-auto flex flex-col gap-[6px]">
                 {item.links?.map((lnk, i) => (
-                  <a
+                  <button
                     key={`${lnk.label}-${i}`}
                     className="nav-card-link inline-flex items-center gap-[6px] no-underline cursor-pointer transition-opacity duration-300 hover:opacity-75 text-[15px] md:text-[16px]"
-                    href={lnk.href} // استخدم href هنا
-                    aria-label={lnk.ariaLabel}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      const target = document.querySelector(lnk.href);
-                      target?.scrollIntoView({ behavior: "smooth" });
-                    }}
+                    onClick={() => handleScrollOrRoute(lnk.href)}
                   >
                     {lnk.label}
                     <GoArrowUpLeft
                       className="nav-card-link-icon shrink-0"
                       aria-hidden="true"
                     />
-                  </a>
+                  </button>
                 ))}
               </div>
             </div>

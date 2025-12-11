@@ -5,19 +5,19 @@ import logo from "../assets/aknan-logo.png";
 const Header = () => {
   const items = [
     {
-      label: "عن أكنان",
+      label: "أهم الصفحات",
       bgColor: "#000",
       textColor: "#fff",
       links: [
         {
-          label: "رؤيتنا ورسالتنا",
-          ariaLabel: "رؤيتنا ورسالتنا",
-          href: "#about",
+          label: "الرئيسية",
+          ariaLabel: "الرئيسية",
+          href: "/",
         },
         {
-          label: "نبذة عن الشركة",
-          ariaLabel: "نبذة عن الشركة",
-          href: "#about",
+          label: "تسجيل بياناتك",
+          ariaLabel: "تسجيل بياناتك",
+          href: "/register",
         },
       ],
     },

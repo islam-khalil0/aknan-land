@@ -1,25 +1,22 @@
 import "./App.css";
-import AboutSection from "./components/AboutSection";
-import ExploreSection from "./components/ExploreSection";
-import FaqSection from "./components/FaqSection";
-import Form from "./components/Form";
+import { Routes, Route } from "react-router-dom";
+
 import Header from "./components/Header";
-import HeroSection from "./components/HeroSection";
-import ServicesSection from "./components/ServicesSection";
-import WhyAknan from "./components/WhyAknan";
 import Footer from "./components/Footer";
+
+import HomePage from "./pages/HomePage";
+import FormPage from "./pages/FormPage";
 
 function App() {
   return (
     <>
       <Header />
-      <HeroSection />
-      <AboutSection />
-      <WhyAknan />
-      <ServicesSection />
-      <Form />
-      <FaqSection />  
-      <ExploreSection />
+
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/register" element={<FormPage />} />
+      </Routes>
+
       <Footer />
     </>
   );
