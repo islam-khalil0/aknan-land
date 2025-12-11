@@ -34,7 +34,7 @@ const Footer = () => {
         </div>
 
         {/* Nav Links */}
-        <nav className="flex gap-8 text-white text-sm max-md:flex-col max-md:w-full max-md:gap-4">
+        <nav className="flex items-start gap-8 text-white text-sm max-md:flex-col max-md:w-full max-md:gap-4">
           <button
             className="hover:text-gray-300"
             onClick={() => handleScrollOrRoute("#about")}
